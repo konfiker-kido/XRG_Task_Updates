@@ -4,7 +4,7 @@
 => i am using buttins like 'Top Rated Restaurant', 'Five Star Restaurant' , and 'Lowest Rating Restaurant' 
 -> and using filter to render accordingly
 => also using the Search box, where i have used the concept of 'useState' to change and modify the search value
-
+=> updating the Images, ratings, menus, Localities, and Restaurant name dynamically
 
 ===============================================================================   Body  component ======================================================
 import { useState } from "react";
