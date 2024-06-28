@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Practice 2 </title>
+</head>
+<style>
+    table {
+        border: 1px solid #dadada;
+        width: 80%;
+        border-collapse: collapse;
+    }
+
+    tr,
+    th,
+    td {
+        text-align: center;
+        border: 1px solid #564f4f;
+        padding: 5px;
+    }
+
+    th {
+        background-color: #564f4f;
+        color: white;
+    }
+
+    #searchBox {
+        padding: 25px;
+        margin: 10px;
+    }
+
+    #searchBar {
+        height: 40px;
+        width: 500px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 20px;
+    }
+</style>
+
+<body>
+
+    <div id="searchBox">
+        <input type="search" name="" id="searchBar">
+        <label for="">Search By Department</label>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th data-column="id" data-order="desc">EmpID</th>
+                <th data-column="name" data-order="desc">EmpName</th>
+                <th data-column="age" data-order="desc">EmpAge</th>
+                <th data-column="mail" data-order="desc">EmpEmail</th>
+                <th data-column="phone" data-order="desc">EmpPhone</th>
+                <th data-column="department" data-order="desc">EmpDepartment</th>
+            </tr>
+        <tbody id="table">
+
+        </tbody>
+        </thead>
+    </table>
+
+</body>
+
+<script>
+
+    const Department = ['FrontEnd', 'Social-Media', 'SEO', 'Networking', 'Backend', 'HR'];
+    const Employess = [];
+    var tempEmployess = Employess;
+    var searchValue = "";
+    const searchBox = document.getElementById('searchBar');
+    const table = document.getElementById('table');
+
+    // generating the age between 21 to 36
+    const empAge = () => {
+        let age = Math.floor(Math.random() * 100);
+        while (age <= 20 || age >= 37) {
+            age = Math.floor(Math.random() * 100);
+        }
+        return age;
+    };
+
+    // generating 10 Employess 
+    for (let i = 0; i < 10; i++) {
+        let emp = {
+            EmpID: i + 1,
+            EmpName: `Employee_${i}`,
+            EmpAge: empAge(),
+            EmpEmail: `Employee.ofc${i}@company.com`,
+            EmpPhone: `98567${Math.floor(Math.random() * 1100001)}`,
+            EmpDepartment: Department[Math.floor(Math.random() * 6)]
+        };
+        Employess.push(emp);
+    }
+
+
+
+    // fetching the value of search box
+    searchBox.addEventListener('input', function () {
+        searchValue = (this.value);
+        render(searchValue); // pass this search value 
+    })
+
+
+    // conditional rendring 
+    const render = (str) => {
+        if (searchValue === "") {
+            renderWholeTable(Employess);
+        } else { // filter Departmnet-wise 
+            const empTemp = tempEmployess.filter((e) => {
+                return e.EmpDepartment.toLowerCase().includes(str.toLowerCase());
+            });
+            renderWholeTable(empTemp);
+        }
+    }
+
+
+    // sorting  the columns  ( using JQuery)
+    $('th').on('click', function () {
+        var column = $(this).data('column');
+        var order = $(this).data('order');
+        if (order == 'desc') {
+            $(this).data('order', 'asc')
+            tempEmployess = tempEmployess.sort((a, b) => a[column] > b[column] ? 1 : -1)
+        } else {
+            $(this).data('order', 'desc')
+            tempEmployess = tempEmployess.sort((a, b) => a[column] < b[column] ? 1 : -1)
+        }
+        console.log(tempEmployess);
+        renderWholeTable(tempEmployess);
+    })
+
+
+    function renderWholeTable(emp) {
+        table.innerHTML = "";
+        // rendering the dynamic data
+        for (let i = 0; i < emp.length; i++) {
+            var row = `
+                <td>${emp[i].EmpID}</td>
+                <td>${emp[i].EmpName}</td>
+                <td>${emp[i].EmpAge}</td>
+                <td>${emp[i].EmpEmail}</td>
+                <td>${emp[i].EmpPhone}</td>
+                <td>${emp[i].EmpDepartment}</td> 
+             `
+            table.innerHTML += row;
+        }
+    }
+
+    render("");  
+</script>
+
+</html>
