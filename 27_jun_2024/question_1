@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 1</title>
+    <style>
+        form {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            box-sizing: border-box;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .info {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="studentForm">
+        <label for="firstname">First Name:</label>
+        <input type="text" id="firstname" name="firstname" required>
+        <span class="error" id="firstnameError"></span>
+
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" required>
+        <span class="error" id="lastnameError"></span>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <span class="error" id="emailError"></span>
+
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="mobile" name="mobile" required>
+        <span class="error" id="mobileError"></span>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label for="class">Class:</label>
+        <input type="text" id="class" name="class" required>
+
+        <label for="rollNumber">Roll Number:</label>
+        <input type="text" id="rollNumber" name="rollNumber" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <span class="error" id="passwordError"></span>
+
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <span class="error" id="confirmPasswordError"></span>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required>
+        <span class="error" id="dobError"></span>
+        <span class="info" id="ageInfo"></span>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('studentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const firstname = document.getElementById('firstname').value.trim();
+            const lastname = document.getElementById('lastname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const gender = document.getElementById('gender').value;
+            const studentClass = document.getElementById('class').value.trim();
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            const dob = document.getElementById('dob').value;
+
+            let validFlag = true;
+
+            // Firstname validation using regular expression
+            // we can use the ASCII value to validate this one also
+            if (!/^[A-Za-z]+$/.test(firstname)) {
+                document.getElementById('firstnameError').textContent = "Invalid first name.";
+                validFlag = false;
+            } else {
+                document.getElementById('firstnameError').textContent = "";
+            }
+
+            // Lastname validation using regular expression
+            // can use the ASCII also
+            if (!/^[A-Za-z]+$/.test(lastname)) {
+                document.getElementById('lastnameError').textContent = "Invalid last name.";
+                validFlag = false;
+            } else {
+                document.getElementById('lastnameError').textContent = "";
+            }
+
+            // Email validation using regular expression
+            if (!/.+@.+\..+/.test(email)) {
+                document.getElementById('emailError').textContent = "Invalid email.";
+                validFlag = false;
+            } else {
+                document.getElementById('emailError').textContent = "";
+            }
+
+            // Mobile validation using regular expression
+            // can use the ASCII for the numbers (ex:  'mobile[i]-'0' )
+            if (!/^[6-9]\d{9}$/.test(mobile)) {
+                document.getElementById('mobileError').textContent = "Invalid mobile number.";
+                validFlag = false;
+            } else {
+                document.getElementById('mobileError').textContent = "";
+            }
+
+            // Password validation using Regular Expression
+            if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+                document.getElementById('passwordError').textContent = "Password must contain at least 8 characters, including an uppercase letter, a number, and a special character.";
+                validFlag = false;
+            } else {
+                document.getElementById('passwordError').textContent = "";
+            }
+
+            // Confirm password validation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = "Passwords do not match.";
+                validFlag = false;
+            } else {
+                document.getElementById('confirmPasswordError').textContent = "";
+            }
+
+            // Date of birth validation
+            const today = new Date();
+            const dobDate = new Date(dob);
+            const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+
+            if (dobDate > today || dobDate < minDate) {
+                document.getElementById('dobError').textContent = "Invalid date of birth.";
+                validFlag = false;
+            } else {
+                document.getElementById('dobError').textContent = "";
+                // Calculate age in days
+                const ageInDays = Math.floor((today - dobDate) / (1000 * 60 * 60 * 24));
+                document.getElementById('ageInfo').textContent = `You are ${ageInDays} days old.`;
+            }
+
+            // Store in local storage if validFlag
+            if (validFlag) {
+                const student = {
+                    firstname,
+                    lastname,
+                    email,
+                    mobile,
+                    gender,
+                    class: studentClass,
+                    rollNumber,
+                    dob
+                };
+
+                let students = JSON.parse(localStorage.getItem('students')) || [];
+                students.push(student);
+                localStorage.setItem('students', JSON.stringify(students));
+
+                alert('Student registered successfully!');
+                document.getElementById('studentForm').reset();
+                document.getElementById('ageInfo').textContent = "";
+            }
+        });
+    </script>
+</body>
+
+</html>
