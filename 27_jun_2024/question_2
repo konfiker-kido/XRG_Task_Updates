@@ -1,0 +1,64 @@
+// App.js  --------------------------------------------------------------------------------------
+import React, { useState } from 'react';
+import FunctionalComponent from './FunctionalComponent';
+import ClassComponent from './ClassComponent';
+
+function App() {
+  const [intro, setIntro] = useState('i am functional Component');
+
+
+  return (
+    <div>
+      <h1>React Components</h1>
+      <ComponentUsingFunc message={message} updateMessage={setIntro("i chnaged my intro")} />
+      <ComponentUsingCls />
+    </div>
+  );
+}
+
+
+// FunctionalComponent.js file      ---------------------------------------------------------
+const ComponentUsingFunc = ({ message, updateMessage }) => {
+  const [localMessage, setLocalMessage] = useState('i am Local ');
+
+
+  return (
+    <div>
+      <h2>Functional Component</h2>
+      <p>App Message: {message}</p>
+      <p>Local Message: {localMessage}</p>
+      <button onClick={setLocalMessage("i got changed")}>Change Msg </button>
+    </div>
+  );
+};
+
+
+
+
+// ClassComponent.js file   ----------------------------------------------------
+
+class ComponentUsingCls extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      localMessage: 'Hello from Class Component!'
+    };
+  }
+
+  handleUpdateMessage = () => {
+    this.setState({ localMessage: 'Updated this intro by Class Component' });
+  };
+
+  render() {
+    return (
+      <div>
+        <h2>Class Component</h2>
+        <p>Local Message: {this.state.localMessage}</p>
+        <button onClick={this.handleUpdateMessage}>Update Local Message</button>
+      </div>
+    );
+  }
+}
+
+
+
