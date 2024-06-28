@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic User Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nested-table {
+            margin-left: 20px;
+        }
+
+        .toggle-button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <table id="userTable"></table>
+
+    <script>
+
+        const users = [
+            {
+                id: 1,
+                firstName: "John",
+                lastName: "Doe",
+                contact: {
+                    email: "john.doe@example.com",
+                    phone: "123-456-7890",
+                    address: {
+                        street: "123 Main St",
+                        city: "Anytown",
+                        state: "CA",
+                        zip: "12345",
+                        country: "USA"
+                    },
+                    social: {
+                        facebook: "https://www.facebook.com/johndoe",
+                        twitter: "https://twitter.com/johndoe",
+                        linkedIn: "https://www.linkedin.com/in/johndoe"
+                    }
+                }
+            },
+            // Add 9 more user objects here
+        ];
+
+        const userTable = document.getElementById('userTable');
+
+        function createTableFromObject(data, level = 0) {
+            const table = document.createElement('table');
+            table.classList.add('nested-table');
+
+            // Create table headers
+            const headers = Object.keys(data);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Create table rows
+            const row = document.createElement('tr');
+            headers.forEach(header => {
+                const td = document.createElement('td');
+                const value = data[header];
+                if (typeof value === 'object' && value !== null) {
+                    const button = document.createElement('button');
+                    button.textContent = '+';
+                    button.classList.add('toggle-button');
+                    button.addEventListener('click', () => {
+                        const nestedTable = td.querySelector('table');
+                        if (nestedTable.style.display === 'none') {
+                            nestedTable.style.display = 'table';
+                            button.textContent = '-';
+                        } else {
+                            nestedTable.style.display = 'none';
+                            button.textContent = '+';
+                        }
+                    });
+                    td.appendChild(button);
+                    td.appendChild(createTableFromObject(value, level + 1));
+                } else {
+                    td.textContent = value;
+                }
+                row.appendChild(td);
+            });
+            table.appendChild(row);
+
+            if (level > 0) {
+                table.style.display = 'none';
+            }
+
+            return table;
+        }
+
+        // Create main table
+        const mainTable = document.createElement('table');
+        mainTable.appendChild(createTableFromObject(users[0]).querySelector('tr')); // Headers
+
+        // Add user data to main table
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            Object.values(user).forEach(value => {
+                const td = document.createElement('td');
+                if (typeof value === 'object' && value !== null) {
+                    const button = document.createElement('button');
+                    button.textContent = '+';
+                    button.classList.add('toggle-button');
+                    button.addEventListener('click', () => {
+                        const nestedTable = td.querySelector('table');
+                        if (nestedTable.style.display === 'none') {
+                            nestedTable.style.display = 'table';
+                            button.textContent = '-';
+                        } else {
+                            nestedTable.style.display = 'none';
+                            button.textContent = '+';
+                        }
+                    });
+                    td.appendChild(button);
+                    td.appendChild(createTableFromObject(value));
+                } else {
+                    td.textContent = value;
+                }
+                row.appendChild(td);
+            });
+            mainTable.appendChild(row);
+        });
+
+        userTable.appendChild(mainTable);
+
+    </script>
+</body>
+
+</html>
