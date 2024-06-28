@@ -1,0 +1,98 @@
+
+  ==============================================================  Intution =========================================================================================================
+= > here i am using the Swiggy Data to iterate over, and rendering the component using the filter
+=> i am using buttins like 'Top Rated Restaurant', 'Five Star Restaurant' , and 'Lowest Rating Restaurant' 
+-> and using filter to render accordingly
+=> also using the Search box, where i have used the concept of 'useState' to change and modify the search value
+
+
+===============================================================================   Body  component ======================================================
+import { useState } from "react";
+import Restaurant from "../Utility/Restaurants";
+import ResCard from "./ResCard";
+
+const Body=()=>{ 
+  const [Restaurants,setRestaurants] = useState(Restaurant);
+  const [TempRestaurants,setTempRestaurants] = useState(Restaurant);
+
+  const [searchBoxText,setSearchBoxText] =useState(""); 
+  const [tempSearchBoxText,setTempSearchBoxText] =useState(searchBoxText);
+  
+//   const fetchData=async ()=>{
+//      const data=await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.406498&lng=78.47724389999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
+//     const jsonData=await data.json(); 
+//       console.log(jsonData);  
+//    };
+  
+//    useEffect(()=>{
+//       fetchData();
+//    },[]);
+
+
+return (
+        <div className="bodyContainer"> 
+            {/* <ResCard  name={Restaurant[0].info.name} place={Restaurant[0].info.areaName} link={Restaurant[0].info.cloudinaryImageId} menu={Restaurant[0].info.cuisines}/> 
+            <ResCard  name={Restaurant[1].info.name} place={Restaurant[1].info.areaName} link={Restaurant[1].info.cloudinaryImageId} menu={Restaurant[1].info.cuisines}/> 
+            <ResCard  name={Restaurant[2].info.name} place={Restaurant[2].info.areaName} link={Restaurant[2].info.cloudinaryImageId} menu={Restaurant[2].info.cuisines}/> 
+            <ResCard  name={Restaurant[3].info.name} place={Restaurant[3].info.areaName} link={Restaurant[3].info.cloudinaryImageId} menu={Restaurant[3].info.cuisines}/> 
+            <ResCard  name={Restaurant[4].info.name} place={Restaurant[4].info.areaName} link={Restaurant[4].info.cloudinaryImageId} menu={Restaurant[4].info.cuisines}/> 
+             */} 
+
+            
+        <div className="btns"> 
+
+             <div className="searchBar">  
+                <input type="text" className="seachBox" value={tempSearchBoxText} onChange={(e)=>{
+                         setTempSearchBoxText(e.target.value);  
+                }}/> 
+                <button className="searchBtn" onClick={
+                    ()=>{
+                        const serachedResturant=Restaurants.filter((r)=>{ 
+                              return r.info.name.toLowerCase().includes(tempSearchBoxText.toLowerCase());
+                        }) 
+                        setTempRestaurants(serachedResturant);   
+                    }
+                }>Search</button>
+             </div>
+
+                <button className="fiveStar" onClick={()=>{
+                    const fiveStarRestaurant=Restaurants.filter((r)=>{
+                         return r.info.avgRating===5
+                    }) 
+                    setTempRestaurants(fiveStarRestaurant);  
+                }}>  
+            Five Star Restaurant</button>   
+
+                <button className="topRated" onClick={ 
+                    ()=>{
+                        const resultRestaurant=Restaurants.filter((r)=>{
+                           return r.info.avgRating>4
+                        });
+                        setTempRestaurants(resultRestaurant);
+                    } 
+    }> Top Rated Restaurant</button> 
+
+
+    <button className="lowestRated"  onClick={()=>{
+                      const lowestRatedRestaurant=Restaurants.filter((r)=>{
+                          return r.info.avgRating<4
+                      });
+                      console.log(lowestRatedRestaurant); 
+                      setTempRestaurants(lowestRatedRestaurant); 
+                }} > Lowest Rating Restaurant</button> 
+
+            </div>
+
+
+            <div className="restCards"> 
+             { 
+                TempRestaurants.map((x)=>{  
+                  return  <ResCard key={x.info.id} name={x.info.name} place={x.info.areaName} link={x.info.cloudinaryImageId} menu={x.info.cuisines} rating={x.info.avgRating}/> 
+                })
+             }
+             </div> 
+        </div>
+    );
+};
+
+export default Body;
