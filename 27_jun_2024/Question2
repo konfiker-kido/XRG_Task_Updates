@@ -56,10 +56,10 @@
             <tr>
                 <th data-column="id" data-order="desc">EmpID</th>
                 <th data-column="name" data-order="desc">EmpName</th>
-                <th data-column="age" data-order="desc">EmpAge</th>
-                <th data-column="mail" data-order="desc">EmpEmail</th>
-                <th data-column="phone" data-order="desc">EmpPhone</th>
-                <th data-column="department" data-order="desc">EmpDepartment</th>
+                <th>EmpAge</th>
+                <th>EmpEmail</th>
+                <th>EmpPhone</th>
+                <th>EmpDepartment</th>
             </tr>
         <tbody id="table">
 
